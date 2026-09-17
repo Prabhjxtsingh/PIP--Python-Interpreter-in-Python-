@@ -1,0 +1,5 @@
+Flask==3.0.3
+pywebview==5.1.1
+Flask-CORS==4.0.1
+# Our shared runner_engine
+-e ../runner_engine
