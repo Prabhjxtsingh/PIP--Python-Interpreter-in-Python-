@@ -1,0 +1,8 @@
+site_name: PIP (Python Interpreter in Python)
+theme:
+  name: material
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Runner Engine: runner.md
+  - API Spec: api_spec.md

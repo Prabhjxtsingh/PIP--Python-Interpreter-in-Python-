@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: pip_user
+      POSTGRES_PASSWORD: pip_password
+      POSTGRES_DB: pip_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgres://pip_user:pip_password@db:5432/pip_db
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - REDIS_URL=redis://redis:6379/0
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./backend:/app
+      - ./runner_engine:/runner_engine
+
+  celery_worker:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    command: celery -A config worker -l info
+    environment:
+      - DATABASE_URL=postgres://pip_user:pip_password@db:5432/pip_db
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DOCKER_HOST=unix:///var/run/docker.sock
+    depends_on:
+      - redis
+      - db
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./backend:/app
+      - ./runner_engine:/runner_engine
+
+volumes:
+  postgres_data:
