@@ -10,9 +10,14 @@ export default function WorkspaceLayout() {
       {/* Top Navbar */}
       <div className="flex h-12 items-center justify-between border-b border-gray-700 bg-[#252526] px-4">
         <div className="font-bold">PIP IDE</div>
-        <button className="flex items-center gap-2 rounded bg-green-600 px-3 py-1 text-sm font-medium hover:bg-green-700">
-          <Play size={16} /> Run
-        </button>
+        <div className="flex items-center gap-4">
+          <a href="/api/download-desktop/" className="text-sm font-medium text-blue-400 hover:text-blue-300">
+            Download Desktop App
+          </a>
+          <button className="flex items-center gap-2 rounded bg-green-600 px-3 py-1 text-sm font-medium hover:bg-green-700">
+            <Play size={16} /> Run
+          </button>
+        </div>
       </div>
 
       {/* Main Content Area */}
